@@ -21,6 +21,9 @@ resource "aws_security_group" "this" {
 
 # インバウンドルール、アウトバウンドルールの設定
 resource "aws_security_group_rule" "ssh" {
+  # count = 2 # 2つのルールを設定する
+  count = var.allow_ssh ? 1 : 0
+
   type              = "ingress"
   from_port         = 22
   to_port           = 22
