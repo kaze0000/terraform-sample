@@ -1,7 +1,7 @@
 resource "aws_instance" "this" {
   ami           = "ami-0df2ca8a354185e1e"
   instance_type = "t2.micro"
-  subnet_id     = "subnet-0ea856de19a8c03c8"
+  subnet_id     = var.subnet_id
 
   vpc_security_group_ids = [aws_security_group.this.id]
 
@@ -15,7 +15,13 @@ resource "aws_instance" "this" {
   }
 }
 
+data "aws_subnet" "this" {
+  id = var.subnet_id //データソースで検索するサブネットのIDを指定
+}
+
 resource "aws_security_group" "this" {
+  # subnet_idからvpc_idを取得する(data resourceを使う)
+  vpc_id = data.aws_subnet.this.vpc_id
   name = "terraform-sample-SG"
 }
 
